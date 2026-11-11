@@ -13,6 +13,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedHealthRouteImport } from './routes/_authenticated/health'
+import { Route as AuthenticatedPortfolioRouteImport } from './routes/_authenticated/portfolio'
 import { Route as AuthenticatedStocksRouteImport } from './routes/_authenticated/stocks'
 import { Route as AuthenticatedWatchlistRouteImport } from './routes/_authenticated/watchlist'
 import { Route as AuthenticatedStockSymbolRouteImport } from './routes/_authenticated/stock.$symbol'
@@ -36,6 +37,11 @@ const AuthenticatedHealthRoute = AuthenticatedHealthRouteImport.update({
   path: '/health',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedPortfolioRoute = AuthenticatedPortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedStocksRoute = AuthenticatedStocksRouteImport.update({
   id: '/stocks',
   path: '/stocks',
@@ -57,6 +63,7 @@ export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/login': typeof LoginRoute
   '/health': typeof AuthenticatedHealthRoute
+  '/portfolio': typeof AuthenticatedPortfolioRoute
   '/stocks': typeof AuthenticatedStocksRoute
   '/watchlist': typeof AuthenticatedWatchlistRoute
   '/stock/$symbol': typeof AuthenticatedStockSymbolRoute
@@ -64,6 +71,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/health': typeof AuthenticatedHealthRoute
+  '/portfolio': typeof AuthenticatedPortfolioRoute
   '/stocks': typeof AuthenticatedStocksRoute
   '/watchlist': typeof AuthenticatedWatchlistRoute
   '/': typeof AuthenticatedIndexRoute
@@ -74,6 +82,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/_authenticated/health': typeof AuthenticatedHealthRoute
+  '/_authenticated/portfolio': typeof AuthenticatedPortfolioRoute
   '/_authenticated/stocks': typeof AuthenticatedStocksRoute
   '/_authenticated/watchlist': typeof AuthenticatedWatchlistRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
@@ -82,14 +91,28 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/login' | '/health' | '/stocks' | '/watchlist' | '/stock/$symbol'
+    | '/'
+    | '/login'
+    | '/health'
+    | '/portfolio'
+    | '/stocks'
+    | '/watchlist'
+    | '/stock/$symbol'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/health' | '/stocks' | '/watchlist' | '/' | '/stock/$symbol'
+  to:
+    | '/login'
+    | '/health'
+    | '/portfolio'
+    | '/stocks'
+    | '/watchlist'
+    | '/'
+    | '/stock/$symbol'
   id:
     | '__root__'
     | '/_authenticated'
     | '/login'
     | '/_authenticated/health'
+    | '/_authenticated/portfolio'
     | '/_authenticated/stocks'
     | '/_authenticated/watchlist'
     | '/_authenticated/'
@@ -131,6 +154,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedHealthRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/portfolio': {
+      id: '/_authenticated/portfolio'
+      path: '/portfolio'
+      fullPath: '/portfolio'
+      preLoaderRoute: typeof AuthenticatedPortfolioRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/stocks': {
       id: '/_authenticated/stocks'
       path: '/stocks'
@@ -157,6 +187,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedHealthRoute: typeof AuthenticatedHealthRoute
+  AuthenticatedPortfolioRoute: typeof AuthenticatedPortfolioRoute
   AuthenticatedStocksRoute: typeof AuthenticatedStocksRoute
   AuthenticatedWatchlistRoute: typeof AuthenticatedWatchlistRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
@@ -165,6 +196,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedHealthRoute: AuthenticatedHealthRoute,
+  AuthenticatedPortfolioRoute: AuthenticatedPortfolioRoute,
   AuthenticatedStocksRoute: AuthenticatedStocksRoute,
   AuthenticatedWatchlistRoute: AuthenticatedWatchlistRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,

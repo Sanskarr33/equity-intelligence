@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { fallback, zodValidator } from "@tanstack/zod-adapter";
-import { useMemo, useState } from "react";
+import { type ReactNode, useMemo, useState } from "react";
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { z } from "zod";
 import { Change } from "@/components/Change";
@@ -87,7 +87,7 @@ function PortfolioPage() {
   );
 }
 
-function Kpi({ label, value }: { label: string; value: React.ReactNode }) {
+function Kpi({ label, value }: { label: string; value: ReactNode }) {
   return (
     <div className="rounded-md border bg-card px-3 py-2">
       <div className="text-[11px] text-muted-foreground">{label}</div>
@@ -101,7 +101,7 @@ function Money({ v }: { v: unknown }) {
   return <span className={n == null || n === 0 ? "" : n > 0 ? "tone-up" : "tone-down"}>{inr(n)}</span>;
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({ title, children }: { title: string; children: ReactNode }) {
   return <div><h2 className="section-title">{title}</h2>{children}</div>;
 }
 
@@ -188,7 +188,7 @@ function Positions({ accountId, manual }: { accountId: string; manual: boolean }
   );
 }
 
-export function PositionRow({ p, action, showAccount }: { p: PaperPosition; action?: React.ReactNode; showAccount?: boolean }) {
+function PositionRow({ p, action, showAccount }: { p: PaperPosition; action?: ReactNode; showAccount?: boolean }) {
   const lt = p.strategy === "long_term";
   return (
     <tr>
