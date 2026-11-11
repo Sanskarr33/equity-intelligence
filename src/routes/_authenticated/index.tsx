@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { Fragment, useState } from "react";
 import { ActionBadge } from "@/components/ActionBadge";
+import { PaperBuyButton } from "@/components/paper/PaperBuyButton";
 import { ExplanationPanel } from "@/components/ExplanationPanel";
 import { Empty, ErrorBox, TableSkeleton } from "@/components/States";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -88,6 +89,7 @@ function OppTable({ strategy }: { strategy: Strategy }) {
             <th className="num">Qty</th>
             <th className="num">Confidence</th>
             <th>Setup</th>
+            <th />
           </tr>
         </thead>
         <tbody>
@@ -113,10 +115,11 @@ function OppTable({ strategy }: { strategy: Strategy }) {
                   <td className="num">{int(s.quantity)}</td>
                   <td className="num font-medium">{confidencePct(s.confidence)}</td>
                   <td className="capitalize">{setupLabel(s.setup)}</td>
+                  <td onClick={(e) => e.stopPropagation()}><PaperBuyButton s={s} /></td>
                 </tr>
                 {isOpen && (
                   <tr>
-                    <td colSpan={13} className="!whitespace-normal bg-muted/40 px-4 py-3">
+                    <td colSpan={14} className="!whitespace-normal bg-muted/40 px-4 py-3">
                       <ExplanationPanel s={s} columns />
                     </td>
                   </tr>
