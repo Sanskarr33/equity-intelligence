@@ -15,6 +15,8 @@ export const Route = createFileRoute("/_authenticated/stocks")({
       { name: "description", content: "Searchable list of Nifty 500 stocks with scores and strategy verdicts." },
       { property: "og:title", content: "Stocks — Equity Intelligence" },
       { property: "og:description", content: "Searchable list of Nifty 500 stocks with scores and strategy verdicts." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: StocksPage,

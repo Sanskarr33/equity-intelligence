@@ -13,6 +13,8 @@ export const Route = createFileRoute("/_authenticated/health")({
       { name: "description", content: "Freshness of prices, fundamentals and signals, plus known data gaps." },
       { property: "og:title", content: "Data Health — Equity Intelligence" },
       { property: "og:description", content: "Freshness of prices, fundamentals and signals, plus known data gaps." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: HealthPage,

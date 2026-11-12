@@ -14,6 +14,8 @@ export const Route = createFileRoute("/login")({
       { name: "description", content: "Sign in to the Equity Intelligence research dashboard." },
       { property: "og:title", content: "Sign in — Equity Intelligence" },
       { property: "og:description", content: "Sign in to the Equity Intelligence research dashboard." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   beforeLoad: async () => {
