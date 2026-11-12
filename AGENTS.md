@@ -28,3 +28,5 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+- Stock verdicts reuse the shared paper-buy control, and stock positions reuse the paper-position query cache; this keeps both stock and portfolio screens consistent.

@@ -4,6 +4,8 @@ import { ActionBadge } from "@/components/ActionBadge";
 import { Change } from "@/components/Change";
 import { ExplanationPanel } from "@/components/ExplanationPanel";
 import { LevelsTable } from "@/components/LevelsTable";
+import { AdviceBadge } from "@/components/paper/AdviceBadge";
+import { PaperBuyButton } from "@/components/paper/PaperBuyButton";
 import { PriceChart } from "@/components/PriceChart";
 import { ComponentBar, ScoreBar } from "@/components/ScoreBar";
 import { Empty, ErrorBox, TableSkeleton } from "@/components/States";
@@ -12,7 +14,8 @@ import { usePriceBars } from "@/hooks/usePriceBars";
 import { useSignalHistory } from "@/hooks/useSignalHistory";
 import { useStock } from "@/hooks/useStocks";
 import { useStockSignals } from "@/hooks/useStockSignals";
-import { asStringArray, fixed, fmtDate, inr, strategyLabel } from "@/lib/format";
+import { asStringArray, fixed, fmtDate, inr, int, strategyLabel } from "@/lib/format";
+import { usePaperPositions } from "@/lib/paper";
 import { STRATEGIES, type Fact, type SignalRow, type Strategy } from "@/lib/types";
 
 export const Route = createFileRoute("/_authenticated/stock/$symbol")({
@@ -22,6 +25,8 @@ export const Route = createFileRoute("/_authenticated/stock/$symbol")({
       { name: "description", content: `Verdicts, chart, scores and signal history for ${params.symbol}.` },
       { property: "og:title", content: `${params.symbol} — Equity Intelligence` },
       { property: "og:description", content: `Verdicts, chart, scores and signal history for ${params.symbol}.` },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: StockPage,
@@ -55,7 +60,11 @@ function StockPage() {
 
   const facts = (() => {
     const seen = new Set<string>();
-    return ((byStrategy.swing?.facts ?? []) as Fact[]).filter((f) => f?.label && !seen.has(f.label) && seen.add(f.label));
+    return ((byStrategy.swing?.facts ?? []) as Fact[]).filter((f) => {
+      if (!f?.label || seen.has(f.label)) return false;
+      seen.add(f.label);
+      return true;
+    });
   })();
 
   return (
@@ -83,6 +92,7 @@ function StockPage() {
                 {sig ? (
                   <>
                     <LevelsTable s={sig} />
+                    <PaperBuyButton s={sig} />
                     <Bullets title="Entry conditions" items={asStringArray(sig.entry_conditions)} />
                     <Bullets title="Invalidation conditions" items={asStringArray(sig.invalidation_conditions)} />
                     <details className="text-xs">
@@ -97,6 +107,8 @@ function StockPage() {
         </div>
       )}
 
+      <StockPaperPositions symbol={s.symbol} />
+
       <div className="panel">
         <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
           <h2 className="section-title !mb-0">Price chart</h2>
@@ -110,7 +122,7 @@ function StockPage() {
           </div>
         </div>
         {bars.isLoading ? <TableSkeleton rows={6} /> : bars.error ? <ErrorBox what="price history" /> : !bars.data?.length ? <Empty>No price history.</Empty> : (
-          <PriceChart bars={bars.data} signal={byStrategy[chartStrategy]} />
+            <PriceChart bars={bars.data} {...(byStrategy[chartStrategy] ? { signal: byStrategy[chartStrategy] } : {})} />
         )}
       </div>
 
@@ -127,7 +139,7 @@ function StockPage() {
                 {kind === "fundamental" && score == null && s.fundamental_note && (
                   <div className="rounded-md border border-warn-border bg-warn-bg p-2 text-xs text-warn-fg">Withheld: {s.fundamental_note}</div>
                 )}
-                {(row?.components ?? []).map((c) => <ComponentBar key={c.key} name={c.name} points={c.points} weight={c.weight} notes={c.notes} />)}
+                {(row?.components ?? []).map((c) => <ComponentBar key={c.key} name={c.name} points={c.points} weight={c.weight} notes={c.notes ?? []} />)}
               </div>
             );
           })}
@@ -165,6 +177,30 @@ function StockPage() {
         )}
       </div>
     </div>
+  );
+}
+
+function StockPaperPositions({ symbol }: { symbol: string }) {
+  const positions = usePaperPositions();
+  const rows = (positions.data ?? []).filter((p) => p.symbol === symbol);
+  return (
+    <section>
+      <h2 className="section-title">Paper positions</h2>
+      {positions.isLoading ? <TableSkeleton rows={2} /> : positions.error ? <ErrorBox what="paper positions" /> : !rows.length ? <Empty>No paper positions for this stock.</Empty> : (
+        <div className="table-wrap"><table className="data-table">
+          <thead><tr><th>Account</th><th>Strategy</th><th className="num">Qty</th><th className="num">Avg cost</th><th className="num">Last close</th><th className="num">Unrealised P&amp;L</th><th>Advice</th></tr></thead>
+          <tbody>{rows.map((p) => (
+            <tr key={p.id}>
+              <td>{p.account_name ?? (p.mode === "auto" ? "Model portfolio" : "My trades")}</td>
+              <td>{strategyLabel(p.strategy)}</td><td className="num">{int(p.quantity)}</td>
+              <td className="num">{inr(p.avg_cost)}</td><td className="num">{inr(p.last_close)}</td>
+              <td className="num">{inr(p.unrealised_pnl)} <Change value={p.unrealised_pct} /></td>
+              <td><AdviceBadge advice={p.advice} note={p.advice_note} /></td>
+            </tr>
+          ))}</tbody>
+        </table></div>
+      )}
+    </section>
   );
 }
 
