@@ -10,6 +10,8 @@ export const Route = createFileRoute("/_authenticated/watchlist")({
       { name: "description", content: "Stocks coiling just under resistance, closest to their trigger first." },
       { property: "og:title", content: "Breakout Watchlist — Equity Intelligence" },
       { property: "og:description", content: "Stocks coiling just under resistance, closest to their trigger first." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: WatchlistPage,

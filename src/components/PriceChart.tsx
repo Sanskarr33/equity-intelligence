@@ -39,8 +39,11 @@ export function PriceChart({ bars, signal }: { bars: PriceBar[]; signal?: Signal
       });
       candles.setData(
         bars
-          .filter((b) => num(b.close) !== null)
-          .map((b) => ({ time: b.trade_date, open: num(b.open)!, high: num(b.high)!, low: num(b.low)!, close: num(b.close)! })),
+          .flatMap((b) => {
+            const open = num(b.open), high = num(b.high), low = num(b.low), close = num(b.close);
+            if (open === null || high === null || low === null || close === null) return [];
+            return [{ time: b.trade_date, open, high, low, close }];
+          }),
       );
       const vol = chart.addSeries(lc.HistogramSeries, { priceScaleId: "", priceFormat: { type: "volume" } });
       vol.priceScale().applyOptions({ scaleMargins: { top: 0.8, bottom: 0 } });

@@ -19,6 +19,8 @@ export const Route = createFileRoute("/_authenticated/")({
       { name: "description", content: "Today's BUY and ACCUMULATE signals across swing, positional and long-term strategies." },
       { property: "og:title", content: "Opportunities — Equity Intelligence" },
       { property: "og:description", content: "Today's BUY and ACCUMULATE signals for Nifty 500 stocks." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: OpportunitiesPage,
