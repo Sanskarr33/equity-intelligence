@@ -1,0 +1,10 @@
+# Netlify hosting for the Equity Intelligence dashboard.
+# Lovable builds for Cloudflare by default; NITRO_PRESET makes the same build target Netlify
+# (static assets in dist/, the server-side renderer as a Netlify Function).
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NITRO_PRESET = "netlify"
+  NODE_VERSION = "22"
