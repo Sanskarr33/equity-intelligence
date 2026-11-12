@@ -135,7 +135,7 @@ function StockPage() {
             const cls = kind === "technical" ? s.technical_class : kind === "fundamental" ? s.fundamental_class : s.valuation_class;
             return (
               <div key={kind} className="space-y-2">
-                <ScoreBar label={kind[0].toUpperCase() + kind.slice(1)} score={score} classification={cls} />
+                <ScoreBar label={kind.charAt(0).toUpperCase() + kind.slice(1)} score={score} classification={cls} />
                 {kind === "fundamental" && score == null && s.fundamental_note && (
                   <div className="rounded-md border border-warn-border bg-warn-bg p-2 text-xs text-warn-fg">Withheld: {s.fundamental_note}</div>
                 )}
