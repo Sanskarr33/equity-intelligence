@@ -1,8 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { fallback, zodValidator } from "@tanstack/zod-adapter";
 import { type ReactNode, useMemo, useState } from "react";
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { z } from "zod";
 import { Change } from "@/components/Change";
 import { AdviceBadge } from "@/components/paper/AdviceBadge";
 import { Empty, ErrorBox, TableSkeleton } from "@/components/States";
@@ -15,7 +13,9 @@ import {
 } from "@/lib/paper";
 
 export const Route = createFileRoute("/_authenticated/portfolio")({
-  validateSearch: zodValidator(z.object({ account: fallback(z.string(), "auto").default("auto") })),
+  validateSearch: (search: Record<string, unknown>) => ({
+    account: search.account === "manual" ? "manual" : "auto",
+  }),
   head: () => ({
     meta: [
       { title: "Paper Portfolio — Equity Intelligence" },
