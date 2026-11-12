@@ -14,7 +14,7 @@ import {
 
 export const Route = createFileRoute("/_authenticated/portfolio")({
   validateSearch: (search: Record<string, unknown>) => ({
-    account: search.account === "manual" ? "manual" : "auto",
+    account: search["account"] === "manual" ? "manual" : "auto",
   }),
   head: () => ({
     meta: [
